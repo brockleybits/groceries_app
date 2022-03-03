@@ -16,7 +16,7 @@ This app helps you build your shopping list and, additionally, shows which store
 In the server-level directory, run `npm run dev`.
 
 Runs the app in the development mode.\
-Server: [http://localhost:5000](http://localhost:5000)
+Server: [http://localhost:5000](http://localhost:5000)\
 Client: [http://localhost:3000](http://localhost:3000)
 
 
