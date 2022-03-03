@@ -1,5 +1,5 @@
 # MySQL Database Files
 
-Setup: builds database, tables, and creates dB Admin.
-Populate: adds data to dB.
-Queries: those used in the app, and some extras.
+__Setup__: builds database, tables, and creates dB Admin.\
+__Populate__: adds data to dB.\
+__Queries__: those used in the app, and some extras.
