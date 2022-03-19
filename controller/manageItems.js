@@ -40,8 +40,7 @@ exports.deleteItem = (req,res) => {
             type: QueryTypes.DELETE
         }
     )
-    .then((result) => {
-        res.json(result);
+    .then(() => {
         sequelize.query(
             "DELETE FROM item WHERE id = :id;", {
                 replacements: {
@@ -50,11 +49,9 @@ exports.deleteItem = (req,res) => {
                 type: QueryTypes.DELETE
             }
         )
-        .then(result => res.json(result))
-        .catch(err => console.log('Server-side Item Table DELETE Results Error: ' + err));
     })
     .then(result => res.json(result))
-    .catch(err => console.log('Server-side Store_Item Table DELETE Results Error: ' + err));
+    .catch(err => console.log(`Server-side DELETE Error: ${err}`));
 
 }
 
