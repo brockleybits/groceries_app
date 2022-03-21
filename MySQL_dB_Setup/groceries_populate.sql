@@ -3,7 +3,10 @@ INSERT INTO store VALUES
     (null,"Sprouts","Highland Park"),
     (null,"Vons","Eagle Rock"),
     (null,"Super A","Highland Park"),
-    (null,"Home Depot","Cypress Park");
+    (null,"Home Depot","Cypress Park"),
+    (null,"Target","Eagle Rock"),
+    (null,"Costco","Atwater Village"),
+    (null,"Junior's Discount","Highland Park");
     
 INSERT INTO category VALUES
 	("PDE", "Produce"),
@@ -35,13 +38,18 @@ INSERT INTO store_item VALUES
 (1,1),
 (3,2),
 (4,3),
+(7,3),
 (5,4),
 (1,5),
 (1,6),
 (2,6),
 (3,6),
+(6,6),
 (4,7),
 (3,8),
 (1,9),
 (1,10),
 (2,10);
+
+INSERT INTO user VALUES
+	("guest","abc123");

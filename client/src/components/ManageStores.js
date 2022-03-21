@@ -13,8 +13,8 @@ import Alert from 'react-bootstrap/Alert';
 import '../App.css';
 
 // FontAwesome
-// import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-// import {faTrash} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faTrash} from '@fortawesome/free-solid-svg-icons';
 
 // Item Modal
 import StoreModal from './StoreModal';
@@ -59,6 +59,22 @@ const ManageStores = () => {
             .catch(err => (console.log(`Client-side DELETE Store Error: ${err}`)));
     }
 
+    const deleteStore = id => {
+        if (window.confirm('Delete Store? Are you sure? CAUTION: Deleting a store will also delete any items sold exclusively at this store.')) {
+            axiosRequest.deleteStore(id)
+                .then(() => {
+                    console.log('Store removed.');
+                    setAlert({
+                        alert: true,
+                        message: "Store removed!",
+                        variant: "warning"
+                    });
+                    setStores(stores.filter(store => store.id !== id));
+                })
+                .catch(err => (console.log(`Client-side DELETE Store Error: ${err}`)));
+        } 
+    }
+
     React.useEffect(() => {
         if (alert.alert) {
             localStorage.removeItem('alert');
@@ -96,6 +112,7 @@ const ManageStores = () => {
                         <div className="fs-6 text-secondary">
                             {store.neighborhood}
                         </div>
+                        <Button variant="outline-danger" size="sm" onClick={() => deleteStore(store.id)}><FontAwesomeIcon icon={faTrash}/></Button>
                     </ListGroup.Item>
                 )}
             </ListGroup>

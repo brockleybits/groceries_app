@@ -29,3 +29,92 @@ exports.insertStore = (req,res) => {
     .then((result) => res.json(result))
     .catch(err => console.log('Server-side Store Table INSERT Results Error: ' + err));
 }
+
+exports.deleteStore = (req,res) => {
+
+    let store_id = req.body.id;
+
+    sequelize.query(
+        "SELECT item_id FROM store_item WHERE store_id = :store_id", {
+            replacements: {
+                store_id
+            },
+            type: QueryTypes.SELECT
+        }
+    )
+    .then((itemIdArray) => {
+
+        let itemList = [];
+
+        if (!!itemIdArray.length) {
+
+            for (item of itemIdArray) itemList.push(item.item_id);
+    
+            const storeItems = sequelize.query(
+                "SELECT item_id, COUNT(item_id) = 1 AS 'unique' FROM store_item WHERE item_id IN (:itemList) GROUP BY item_id;", {
+                    replacements: {
+                        itemList
+                    },
+                    type: QueryTypes.SELECT
+                }
+            )
+    
+            return storeItems;
+        }
+
+        return [];
+
+    })
+    .then(scannedItems => {
+
+        let uniqueItemIds = [];
+        
+        for (item of scannedItems) {
+            if (item.unique === 1) uniqueItemIds.push(item.item_id);
+        }
+
+        sequelize.query(
+            "DELETE FROM store_item WHERE store_id = :store_id;", {
+                replacements: {
+                    store_id
+                },
+                type: QueryTypes.DELETE
+            }
+        )
+        
+        return uniqueItemIds;
+
+    })
+    .then((uniques) => {
+
+        console.log('Ready to delete Item IDs:');
+        console.log(uniques);
+
+        if (!!uniques.length) {
+            sequelize.query(
+                "DELETE FROM item WHERE id IN (:uniques);", {
+                    replacements: {
+                        uniques
+                    },
+                    type: QueryTypes.DELETE
+                }
+            )
+        }
+
+    })
+    .then(() => {
+
+        sequelize.query(
+            "DELETE FROM store WHERE id = :store_id;", {
+                replacements: {
+                    store_id
+                },
+                type: QueryTypes.DELETE
+            }
+        )
+
+    })
+    .then((result) => res.json(result))
+    .catch(err => console.log(`Server-side DELETE Error: ${err}`));
+
+}
