@@ -11,6 +11,7 @@ import '../App.css';
 
 // Components
 import Route from './Route';
+import Login from './Login';
 import CurrentList from './CurrentList';
 import UpdateList from './UpdateList';
 import ManageItems from './ManageItems';
@@ -55,12 +56,15 @@ const Main = () => {
     return (
         <Container>
             <Route path="/">
+                <Login/>
+            </Route>
+            <Route path="/dashboard">
                 <CurrentList 
                     deselectComplete={deselectComplete}
                     toggleDeselect={toggleDeselectComplete}
                 />
             </Route>
-            <Route path="/new-list">
+            <Route path="/update-list">
                 <UpdateList
                     deselectComplete={deselectComplete}
                     toggleDeselect={toggleDeselectComplete}

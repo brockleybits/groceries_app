@@ -12,9 +12,11 @@ import NavMenu from './components/NavMenu';
 // Main App
 const App = () => {
     return (
-        <div className="container-fluid">
+        <div>
             <NavMenu />
-            <Main />
+            <div className="container-fluid">
+                <Main />
+            </div>
         </div>
     )
 };

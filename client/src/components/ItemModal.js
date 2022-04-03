@@ -20,7 +20,7 @@ import '../App.css';
 
 
 // StoreList componenet
-const ItemModal = ({ modalOpen, toggleModal, categories, stores, newItem, editMode, editItem, resetEditMode }) => {
+const ItemModal = ({ modalOpen, toggleModal, categories, stores, newItem, editMode, editItem, firstCategoryId }) => {
 
 const [itemName, setItemName] = React.useState('');
 const [categoryId, setCategoryId] = React.useState(null);
@@ -30,6 +30,7 @@ const [alert, setAlert] = React.useState({
     message: null,
     variant: null
 });
+
 
 React.useEffect(() => {
     let storeIdObj = {};
@@ -45,7 +46,7 @@ React.useEffect(() => {
     }
 
     setStoresChecked(storeIdObj);
-}, [stores, editMode, categories]);
+}, [stores, editMode]);
 
 
 const onChange = (evt) => {
@@ -71,7 +72,9 @@ const onSubmit = (evt) => {
         if (editMode.id) {
             editItem(itemName, categoryId, storeIds);
         } else {
-            newItem(itemName, categoryId, storeIds);
+            let catId = categoryId;
+            if (!catId) catId = firstCategoryId;
+            newItem(itemName, catId, storeIds);
         }
 
         toggleModal();

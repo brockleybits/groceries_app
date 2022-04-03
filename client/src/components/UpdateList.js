@@ -21,6 +21,7 @@ import '../App.css';
 // StoreList componenet
 const UpdateList = ({ deselectComplete, toggleDeselect }) => {
 
+    const [verified, setVerified] = React.useState(false);
     const [categoryItemsTable, setCategoryItemsTable] = React.useState([]);
     const [categoryKeys, setCategoryKeys] = React.useState({});
     const [categoryInfo, setCategoryInfo] = React.useState([]);
@@ -37,12 +38,16 @@ const UpdateList = ({ deselectComplete, toggleDeselect }) => {
             console.log('Requesting Categories & corresponding Items from dB...');
             axiosRequest.getAll()
             .then(res => {
+                setVerified(true);
                 setCategoryItemsTable(res.data);
                 console.log('Categories & Items successfully queried!');
                 if (deselectComplete) toggleDeselect();
                 if (localStorage.alert) setAlert(JSON.parse(localStorage.alert));
             })
-            .catch(err => (console.log(`Client-side Result Error: ${err}`)));
+            .catch(err => {
+                if (err.message === 'Request failed with status code 401') window.location.pathname = '/';
+                console.log(`GET Categories & Items Error: ${err}`);
+            });
         }
     }, [deselectComplete, toggleDeselect]);
 
@@ -132,12 +137,13 @@ const UpdateList = ({ deselectComplete, toggleDeselect }) => {
     return (
         <Container>
             {
-                alert.alert ?
-                    <Alert variant={alert.variant}>{alert.message}</Alert>
-                    :
-                    null
+                alert.alert &&
+                <Alert variant={alert.variant}>{alert.message}</Alert>
             }
-            <Button variant="primary" size="lg" className="my-4 float-right" onClick={() => allDone()}>Save</Button>
+            {
+                verified && 
+                <Button variant="primary" size="lg" className="my-4 float-right" onClick={() => allDone()}>Save</Button>
+            }
             <Accordion>
                 { categoryInfo.map((category) => 
                     <Accordion.Item eventKey={category.category_id} key={category.category_id}>

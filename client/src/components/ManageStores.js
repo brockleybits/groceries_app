@@ -22,6 +22,7 @@ import StoreModal from './StoreModal';
 // StoreList componenet
 const ManageStores = () => {
 
+    const [verified, setVerified] = React.useState(false);
     const [stores, setStores] = React.useState([]);
     const [modalOpen, setModalOpen] = React.useState(false);
     const [alert, setAlert] = React.useState({
@@ -36,10 +37,14 @@ const ManageStores = () => {
         axiosRequest.getAll()
             .then(result => {
                 console.log('Retrieved Stores from dB.');
+                setVerified(true);
                 setStores(result.data);
                 if (localStorage.alert) setAlert(JSON.parse(localStorage.alert));
             })
-            .catch(err => (console.log(`Client-side GET Stores Result Error: ${err}`)));
+            .catch(err => {
+                if (err.message === 'Request failed with status code 401') window.location.pathname = '/';
+                console.log(`GET Stores Error: ${err}`);
+            });
     }, []);
 
     const insertNewStore = (store_name, neighborhood) => {
@@ -91,12 +96,13 @@ const ManageStores = () => {
     return (
         <Container>
             {
-                alert.alert ?
-                    <Alert variant={alert.variant}>{alert.message}</Alert>
-                    :
-                    null
+                alert.alert &&
+                <Alert variant={alert.variant}>{alert.message}</Alert>
             }
-            <Button variant="primary" size="lg" className="my-4" onClick={toggleModal}>Add Store</Button>
+            {
+                verified &&
+                <Button variant="primary" size="lg" className="my-4" onClick={toggleModal}>Add Store</Button>
+            }
             <StoreModal
                 modalOpen={modalOpen}
                 toggleModal={toggleModal}

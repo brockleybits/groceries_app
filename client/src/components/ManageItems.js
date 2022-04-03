@@ -28,9 +28,11 @@ import ItemModal from './ItemModal';
 // StoreList componenet
 const ManageItems = () => {
 
+    const [verified, setVerified] = React.useState(false);
     const [items, setItems] = React.useState([]);
     const [itemList, setItemList] = React.useState([]);
     const [categories, setCategories] = React.useState([]);
+    const [firstCategoryId, setFirstCategoryId] = React.useState('');
     const [stores, setStores] = React.useState([]);
     const [modalOpen, setModalOpen] = React.useState(false);
     const [editMode, setEditMode] = React.useState({
@@ -52,13 +54,17 @@ const ManageItems = () => {
             .then(res => {
                 console.log('Retrieved Items, Categories, and Stores from dB.')
                 let result = res.data;
+                setVerified(true);
                 setItems(result[0]);
                 setCategories(result[1]);
+                setFirstCategoryId(result[1][0].id);
                 setStores(result[2]);
                 if (localStorage.alert) setAlert(JSON.parse(localStorage.alert));
             })
-            .catch(err => (console.log(`Client-side GET Items/Categories/Stores Result Error: ${err}`)));
-    }, []);
+            .catch(err => {
+                if (err.message === 'Request failed with status code 401') window.location.pathname = '/';
+                console.log(`GET Categories, Stores, & Items Error: ${err}`);
+            });    }, []);
 
     React.useEffect(() => setItemList(items), [items]);
 
@@ -162,12 +168,23 @@ const ManageItems = () => {
     return (
         <Container>
             {
-                alert.alert ?
-                    <Alert variant={alert.variant}>{alert.message}</Alert>
-                    :
-                    null
+                alert.alert &&
+                <Alert variant={alert.variant}>{alert.message}</Alert>
             }
-            <Button variant="primary" size="lg" className="mt-4 mb-3" onClick={toggleModal}>Add Item</Button>
+            {
+                verified && 
+                <div>
+                    <Button variant="primary" size="lg" className="mt-4 mb-3" onClick={toggleModal}>Add Item</Button>
+                    <Form.Control
+                        type="text"
+                        className="mb-3"
+                        id="item-search"
+                        name="search"
+                        placeholder="Search"
+                        onChange={onChange}
+                    />
+                </div>
+            }
             <ItemModal
                 modalOpen={modalOpen}
                 toggleModal={toggleModal}
@@ -176,14 +193,7 @@ const ManageItems = () => {
                 newItem={insertNewItem}
                 editMode={editMode}
                 editItem={editItem}
-            />
-            <Form.Control
-                type="text"
-                className="mb-3"
-                id="item-search"
-                name="search"
-                placeholder="Search"
-                onChange={onChange}
+                firstCategoryId={firstCategoryId}
             />
             <ListGroup>
                 { itemList.map(item => 

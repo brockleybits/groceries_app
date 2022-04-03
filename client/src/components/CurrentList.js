@@ -24,6 +24,7 @@ import {faUndo, faCheck} from '@fortawesome/free-solid-svg-icons';
 // Current List of selected items and their corresponding stores, organized by store_id...
 const CurrentList = ({ deselectComplete, toggleDeselect }) => {
 
+    const [verified, setVerified] = React.useState(false);
     const [storeItemsTable, setStoreItemsTable] = React.useState([]);
     const [storeInfo, setStoreInfo] = React.useState([]);
     const [undoStack, setUndoStack] = React.useState([]);
@@ -35,11 +36,15 @@ const CurrentList = ({ deselectComplete, toggleDeselect }) => {
             console.log('Requesting Current List from dB...');
             axiosRequest.getAll()
                 .then(res => {
+                    setVerified(true);
                     setStoreItemsTable(res.data);
                     console.log('Current List successfully queried!');
                     toggleDeselect();
                 })
-                .catch(err => (console.log(`Client-side Current List Result Error: ${err}`)));
+                .catch(err => {
+                    if (err.message === 'Request failed with status code 401') window.location.pathname = '/';
+                    console.log(`GET Store Items Error: ${err}`);
+                });
         }
     }, [deselectComplete, toggleDeselect]);
 
@@ -107,8 +112,11 @@ const CurrentList = ({ deselectComplete, toggleDeselect }) => {
     }
 
     return (
+
         <Container>
-            <Button variant="warning" size="lg" className="my-2" onClick={popUndoStack}><FontAwesomeIcon icon={faUndo}/></Button>
+            {   verified &&
+                <Button variant="warning" size="lg" className="my-2" onClick={popUndoStack}><FontAwesomeIcon icon={faUndo}/></Button>
+            }
             <Accordion>
                 { storeInfo.map((store, index) => 
                     <Accordion.Item eventKey={index} key={store.store_id.toString() + index.toString()}>

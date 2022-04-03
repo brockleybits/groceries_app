@@ -1,7 +1,7 @@
 /* eslint-disable import/no-anonymous-default-export */
 import http from "./Axios-Config";
 
-// Define methods to use in components for http requests to the Functions table
+// Gather current shopping list categorized by store
 const getAll = () => {
   return http.get('/current-list');
 };
