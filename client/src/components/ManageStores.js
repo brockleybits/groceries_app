@@ -118,7 +118,14 @@ const ManageStores = () => {
                         <div className="fs-6 text-secondary">
                             {store.neighborhood}
                         </div>
-                        <Button variant="outline-danger" size="sm" onClick={() => deleteStore(store.id)}><FontAwesomeIcon icon={faTrash}/></Button>
+                        <Button
+                            variant="outline-danger"
+                            size="sm"
+                            onClick={() => deleteStore(store.id)}
+                            disabled={stores.length === 1 ? true : false}
+                            >
+                                <FontAwesomeIcon icon={faTrash}/>
+                        </Button>
                     </ListGroup.Item>
                 )}
             </ListGroup>

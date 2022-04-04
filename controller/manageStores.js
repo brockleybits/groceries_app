@@ -7,7 +7,10 @@ const { QueryTypes} = require('sequelize');
 exports.selectStores = (req,res) => {
 
     sequelize.query(
-        "SELECT * FROM store", {
+        "SELECT * FROM store WHERE user_username = :user", {
+            replacements: {
+                user: req.user
+            },
             type: QueryTypes.SELECT
         }
     )
@@ -18,8 +21,9 @@ exports.selectStores = (req,res) => {
 exports.insertStore = (req,res) => {
 
     sequelize.query(
-        "INSERT INTO store VALUES (null, :store_name, :neighborhood);", {
+        "INSERT INTO store VALUES (:user, null, :store_name, :neighborhood);", {
             replacements: {
+                user: req.user,
                 store_name: req.body.store_name,
                 neighborhood: req.body.neighborhood,
             },

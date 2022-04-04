@@ -34,21 +34,29 @@ const Login = () => {
 
     const onSubmit = (evt) => {
         evt.preventDefault();
-        // Validation
-        axiosRequest.verifyLogin({
-            username,
-            password
-        })
-        .then(result => {
-            console.log(result);
-            if (result.data.auth) window.location.pathname = result.data.location;
-            else setAlert({
-                alert: true,
-                message: 'Invalid Login',
-                variant: 'danger'
+        if (!!username.length && !!password.length) {
+            axiosRequest.verifyLogin({
+                username,
+                password
             })
-        })
-        .catch(err => console.log(err));
+            .then(result => {
+                console.log(result);
+                if (result.data.auth) window.location.pathname = result.data.location;
+                else setAlert({
+                    alert: true,
+                    message: 'Invalid Login',
+                    variant: 'danger'
+                })
+            })
+            .catch(err => console.log(err));
+        } else {
+            setAlert({
+                alert: true,
+                message: 'Username & Password Required',
+                variant: 'warning'
+            })
+        }
+
     }
 
     React.useEffect(() => {

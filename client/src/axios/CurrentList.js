@@ -6,12 +6,7 @@ const getAll = () => {
   return http.get('/current-list');
 };
 
-const addNew = resource => {
-  return http.post('/add-resource', resource)
-}
-
 // Export "Methods"
 export default {
-  getAll,
-  addNew
+  getAll
 };

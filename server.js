@@ -51,18 +51,14 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/current-list', require('./routes/currentList'));
-app.use('/update-list', require('./routes/updateList'));
-app.use('/stores', require('./routes/manageStores'));
-app.use('/items', require('./routes/manageItems'));
-app.use('/deselect-items', require('./routes/deselectItems'));
-app.use('/edit-item', require('./routes/editItem'));
-app.use('/login', require('./routes/login'));
-
-
-
 // Faux Get call returned to Server (:5000)
 // app.get('/', (req,res,next) => {
 //     res.send(req.session);
 //     next();
 // });
+
+app.use('/current-list', require('./routes/currentList'));
+app.use('/update-list', require('./routes/updateList'));
+app.use('/stores', require('./routes/manageStores'));
+app.use('/items', require('./routes/manageItems'));
+app.use('/login', require('./routes/login'));

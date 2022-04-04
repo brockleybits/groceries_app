@@ -7,13 +7,11 @@ module.exports = {
 
             if (req.isAuthenticated()) {
                 console.log('User Verified');
+                return next();
             }
             else {
                 console.log('*** User Not Authenticated ***');
-                res.status(401);
+                res.status(401).end();
             }
-
-            return next();
-
     }
 }

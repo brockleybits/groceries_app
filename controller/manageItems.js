@@ -7,7 +7,10 @@ const { QueryTypes} = require('sequelize');
 exports.selectAll = (req,res) => {
 
     const selectIds = sequelize.query(
-        "SELECT id, item_name FROM item ORDER BY item_name;", {
+        "SELECT id, item_name FROM item WHERE user_username = :user ORDER BY item_name;", {
+            replacements: {
+                user: req.user
+            },
             type: QueryTypes.SELECT
         }
     )
@@ -19,7 +22,10 @@ exports.selectAll = (req,res) => {
     )
 
     const selectStores = sequelize.query(
-        "SELECT id, store_name, neighborhood FROM store ORDER BY id;", {
+        "SELECT id, store_name, neighborhood FROM store WHERE user_username = :user ORDER BY id;", {
+            replacements: {
+                user: req.user
+            },
             type: QueryTypes.SELECT
         }
     )
@@ -59,8 +65,9 @@ exports.deleteItem = (req,res) => {
 exports.insertItem = (req,res) => {
 
     sequelize.query(
-        "INSERT INTO item VALUES (null, :name, :category_id, 0);", {
+        "INSERT INTO item VALUES (:user, null, :name, :category_id, 0);", {
             replacements: {
+                user: req.user,
                 name: req.body.name,
                 category_id: req.body.category_id,
             },
@@ -68,11 +75,13 @@ exports.insertItem = (req,res) => {
         }
     )
     .then((result) => {
+        let user = req.user;
         let item_id = result[0];
         for (let store_id of req.body.store_id) {
             sequelize.query(
-                "INSERT INTO store_item VALUES (:store_id, :item_id);", {
+                "INSERT INTO store_item VALUES (:user, :store_id, :item_id);", {
                     replacements: {
+                        user,
                         item_id,
                         store_id
                     },
@@ -129,13 +138,15 @@ exports.updateItem = (req,res) => {
     )
     .then((result) => {
 
+        let user = req.user;
         let item_id = req.body.id;
 
         if (!!req.body.addStore.length) {
             for (let store_id of req.body.addStore) {
                 sequelize.query(
-                    "INSERT INTO store_item VALUES (:store_id, :item_id);", {
+                    "INSERT INTO store_item VALUES (:user, :store_id, :item_id);", {
                         replacements: {
+                            user,
                             item_id,
                             store_id
                         },
@@ -166,4 +177,26 @@ exports.updateItem = (req,res) => {
         res.json(result);
     })
     .catch(err => console.log('Server-side Item Table INSERT Results Error: ' + err));
+}
+
+
+// Deselect Items
+exports.deselectItems = (req,res) => {
+
+    let deselect = req.body.deselect;
+
+    if (!req.body.deselect.length) deselect = null;
+    else if (req.body.deselect.length === 1) deselect = req.body.deselect[0];
+    else deselect = req.body.deselect;
+
+    sequelize.query(
+        "UPDATE item SET selected = 0 WHERE id IN (:id)", {
+            replacements: {
+                id: deselect
+            },
+            type: QueryTypes.POST
+        }
+    )
+    .then((result) => res.json(result))
+    .catch(err => console.log('Server-side Results Error: ' + err));
 }

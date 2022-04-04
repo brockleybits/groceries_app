@@ -2,7 +2,7 @@
 import React from 'react';
 
 // Axios
-import axiosRequest from '../axios/DeselectItems';
+import axiosRequest from '../axios/ManageItems';
 
 // Bootstrap and CSS
 import 'bootstrap/dist/css/bootstrap.min.css';

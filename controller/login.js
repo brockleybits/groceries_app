@@ -48,7 +48,7 @@ exports.logout = (req,res) => {
 }
 
 // Register new user
-exports.bcryptTest = async (req,res) => {
+exports.hashWord = async (req,res) => {
     const password = req.body.password;
     const salty = await bcrypt.genSalt(10);
     const hashy = await bcrypt.hash(password, salty);

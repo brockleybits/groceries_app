@@ -6,12 +6,7 @@ const { verifyAuthenticated } = require('../config/authenticate');
 const dB = require('../controller/currentList');
 
 // Select all stores
-router.get('/',verifyAuthenticated, dB.currentSelections);
+router.get('/', verifyAuthenticated, dB.currentSelections);
 
-// Add new store
-// router.post('/', dB.addStore);
-
-// Delete Items
-// router.delete('/', dB.deleteStore);
 
 module.exports = router;

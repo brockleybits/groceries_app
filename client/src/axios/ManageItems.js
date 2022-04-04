@@ -17,14 +17,18 @@ const addItem = info => {
 }
 
 const getItem = (id) => {
-    return http.put('/edit-item', {
+    return http.put('/items/edit', {
         data: id
     });
   };
 
-  const editItem = info => {
-    return http.post('/edit-item', info);
+const editItem = info => {
+    return http.post('/items/edit', info);
 }
+
+const deselectItems = idArray => {
+    return http.post('/items/deselect', { deselect: idArray })
+  }
 
 
 // Export "Methods"
@@ -33,5 +37,6 @@ export default {
   deleteItem,
   addItem,
   getItem,
-  editItem
+  editItem,
+  deselectItems
 };

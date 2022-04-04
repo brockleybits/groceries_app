@@ -8,7 +8,11 @@ const dB = require('../controller/login');
 // Verify login
 router.post('/', dB.verifyLogin);
 
+// Get hashed password
+router.post('/hash-word', verifyAuthenticated, dB.hashWord);
+
 // Logout
-router.delete('/', dB.logout);
+router.delete('/', verifyAuthenticated, dB.logout);
+
 
 module.exports = router;
