@@ -1,0 +1,41 @@
+.max-container-width {
+    max-width: 720px;
+}
+
+.login-background {
+    background-image: url("http://localhost:3000/images/grocery_bag.png");
+    background-size: 80%;
+    background-repeat: no-repeat;
+    background-position: bottom center;
+}
+
+.login-height {
+    height: 90vh;
+}
+
+.login-heading {
+    font-size: 2.5em;
+}
+
+.login-sub-heading {
+    text-transform: uppercase;
+    font-size: 0.9em;
+}
+
+.login-title {
+    background-color: white;
+}
+
+.icon-size {
+    font-size: 2em;
+}
+
+.store-font {
+    font-size: 1.1em;
+    font-weight: 700;
+}
+
+.neighborhood-font {
+    font-size: 0.85em;
+    font-weight: 400;
+}

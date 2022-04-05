@@ -62,9 +62,10 @@ const ManageItems = () => {
                 if (localStorage.alert) setAlert(JSON.parse(localStorage.alert));
             })
             .catch(err => {
-                if (err.message === 'Request failed with status code 401') window.location.pathname = '/';
-                console.log(`GET Categories, Stores, & Items Error: ${err}`);
-            });    }, []);
+                console.log(err);
+                window.location.pathname = '/';
+            });
+        }, []);
 
     React.useEffect(() => setItemList(items), [items]);
 
@@ -166,7 +167,7 @@ const ManageItems = () => {
 
 
     return (
-        <Container>
+        <Container className="max-container-width">
             {
                 alert.alert &&
                 <Alert variant={alert.variant}>{alert.message}</Alert>

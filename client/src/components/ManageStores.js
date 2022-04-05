@@ -42,8 +42,8 @@ const ManageStores = () => {
                 if (localStorage.alert) setAlert(JSON.parse(localStorage.alert));
             })
             .catch(err => {
-                if (err.message === 'Request failed with status code 401') window.location.pathname = '/';
-                console.log(`GET Stores Error: ${err}`);
+                console.log(err);
+                window.location.pathname = '/';
             });
     }, []);
 
@@ -94,7 +94,7 @@ const ManageStores = () => {
     }, [alert]);
 
     return (
-        <Container>
+        <Container className="max-container-width">
             {
                 alert.alert &&
                 <Alert variant={alert.variant}>{alert.message}</Alert>
@@ -112,11 +112,13 @@ const ManageStores = () => {
             <ListGroup>
                 { stores.map(store => 
                     <ListGroup.Item className="d-flex justify-content-between align-items-start align-items-center" key={`store-info-${store.id}`}>                        
-                        <div className="fw-bolder fs-5 text-dark">
-                            {store.store_name}
-                        </div>
-                        <div className="fs-6 text-secondary">
-                            {store.neighborhood}
+                        <div>
+                            <span className="store-font">
+                                {store.store_name}
+                            </span>
+                            <span className="nieghborhood-font text-secondary ps-3">
+                                {store.neighborhood}
+                            </span>
                         </div>
                         <Button
                             variant="outline-danger"

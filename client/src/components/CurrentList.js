@@ -42,8 +42,8 @@ const CurrentList = ({ deselectComplete, toggleDeselect }) => {
                     toggleDeselect();
                 })
                 .catch(err => {
-                    if (err.message === 'Request failed with status code 401') window.location.pathname = '/';
-                    console.log(`GET Store Items Error: ${err}`);
+                    console.log(err);
+                    window.location.pathname = '/';
                 });
         }
     }, [deselectComplete, toggleDeselect]);
@@ -113,17 +113,17 @@ const CurrentList = ({ deselectComplete, toggleDeselect }) => {
 
     return (
 
-        <Container>
+        <Container className="max-container-width">
             {   verified &&
-                <Button variant="warning" size="lg" className="my-2" onClick={popUndoStack}><FontAwesomeIcon icon={faUndo}/></Button>
+                <Button variant="warning" size="lg" className="my-3" onClick={popUndoStack}><FontAwesomeIcon icon={faUndo}/></Button>
             }
             <Accordion>
                 { storeInfo.map((store, index) => 
                     <Accordion.Item eventKey={index} key={store.store_id.toString() + index.toString()}>
                         <Accordion.Header>
-                            <span className="fw-bolder fs-5">{store.store_name}</span>
-                            <Badge pill bg="info" className="ms-2">{store.item_name.length}</Badge>
-                            <span className="fw-light fs-6 text-secondary ps-2 pt-1">{store.neighborhood}</span>
+                            <span className="store-font">{store.store_name}</span>
+                            <Badge pill bg="success" className="ms-2">{store.item_name.length}</Badge>
+                            <span className="neighborhood-font text-secondary ps-2">{store.neighborhood}</span>
                         </Accordion.Header>
                         <Accordion.Body>
                             {

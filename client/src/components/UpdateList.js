@@ -45,8 +45,8 @@ const UpdateList = ({ deselectComplete, toggleDeselect }) => {
                 if (localStorage.alert) setAlert(JSON.parse(localStorage.alert));
             })
             .catch(err => {
-                if (err.message === 'Request failed with status code 401') window.location.pathname = '/';
-                console.log(`GET Categories & Items Error: ${err}`);
+                console.log(err);
+                window.location.pathname = '/';
             });
         }
     }, [deselectComplete, toggleDeselect]);
@@ -135,7 +135,7 @@ const UpdateList = ({ deselectComplete, toggleDeselect }) => {
 
 
     return (
-        <Container>
+        <Container className="max-container-width">
             {
                 alert.alert &&
                 <Alert variant={alert.variant}>{alert.message}</Alert>

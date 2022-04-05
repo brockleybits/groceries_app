@@ -73,12 +73,13 @@ const Login = () => {
     }, [alert]);
 
     return (
-        <Container>
+        <Container className="max-container-width login-background login-height">
             {
                 alert.alert &&
                 <Alert variant={alert.variant}>{alert.message}</Alert>
             }
-            <h1 className="my-4 ps-3"><span className="pe-3"><FontAwesomeIcon icon={faDoorOpen} /></span>Login</h1>
+            <h1 className="login-heading" hidden >Welcome to Groceries</h1>
+            <h2 className="my-4 ps-3 login-title"><span className="pe-3"><FontAwesomeIcon icon={faDoorOpen} /></span>Login</h2>
             <Form onSubmit={onSubmit}>
                 <Form.Group>
                     <Form.Control className="m-2" type="text" placeholder="Group Name" onChange={onChange} />
