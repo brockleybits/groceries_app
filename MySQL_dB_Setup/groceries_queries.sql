@@ -2,26 +2,27 @@
 SELECT i.item_name AS Items
 FROM store s JOIN store_item si ON s.id = si.store_id
 			JOIN item i ON i.id = si.item_id
-WHERE s.store_name = "Trader Joe's";
+WHERE si.user_username = "brockleys" AND s.store_name = "Trader Joe's";
 
 
 -- Number of Items at each Store --
 SELECT s.store_name AS Store, COUNT(si.store_id) AS "Number of Items"
 FROM store s JOIN store_item si ON s.id = si.store_id
 			JOIN item i ON i.id = si.item_id
+WHERE si.user_username = "alamedans"
 GROUP BY s.store_name
 ORDER BY COUNT(si.store_id) DESC, s.store_name;
 
 
 -- All Store names and neighborhoods --
-SELECT * FROM store;
+SELECT * FROM store WHERE user_username = "alamedans";
 
 
  -- All Item name and Store name combinations --
 SELECT s.id AS "store_id", s.store_name AS "store_name", s.neighborhood AS "neighborhood", i.id AS "item_id", i.item_name AS "item_name"
 FROM item i JOIN store_item si ON i.id = si.item_id
 			JOIN store s ON s.id = si.store_id
-WHERE i.selected = 1
+WHERE si.user_username = "alamedans" AND i.selected = 1
 ORDER BY s.id;
 
 

@@ -14,8 +14,6 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import '../App.css';
 
 // FontAwesome
@@ -199,13 +197,24 @@ const ManageItems = () => {
             <ListGroup>
                 { itemList.map(item => 
                     <ListGroup.Item key={item.id}>
-                        <Row className="d-flex justify-content-between align-items-start align-items-center">
-                            <Col className="">{item.item_name}</Col>
-                            <Col xs={4}>
-                                <Button className="me-2" variant="outline-success" size="sm" onClick={() => enterEditMode(item.id)}><FontAwesomeIcon icon={faEdit}/></Button>
-                                <Button variant="outline-danger" size="sm" onClick={() => deleteItem(item.id)}><FontAwesomeIcon icon={faTrash}/></Button>
-                            </Col>
-                        </Row>
+                        <div className="d-flex align-items-center">
+                            <div className="me-auto">{item.item_name}</div>
+                            <div>
+                                <Button
+                                    className="me-2"
+                                    variant="outline-success"
+                                    size="sm"
+                                    onClick={() => enterEditMode(item.id)}>
+                                    <FontAwesomeIcon icon={faEdit}/>
+                                </Button>
+                                <Button
+                                    variant="outline-danger"
+                                    size="sm"
+                                    onClick={() => deleteItem(item.id)}>
+                                    <FontAwesomeIcon icon={faTrash}/>
+                                </Button>
+                            </div>
+                        </div>
                     </ListGroup.Item>
                 )}
             </ListGroup>

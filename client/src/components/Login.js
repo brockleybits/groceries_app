@@ -11,7 +11,7 @@ import '../App.css';
 
 // FontAwesome
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faDoorOpen} from '@fortawesome/free-solid-svg-icons';
+import {faArrowCircleRight} from '@fortawesome/free-solid-svg-icons';
 
 // Import Axios calls
 import axiosRequest from '../axios/UserAuth';
@@ -79,7 +79,7 @@ const Login = () => {
                 <Alert variant={alert.variant}>{alert.message}</Alert>
             }
             <h1 className="login-heading" hidden >Welcome to Groceries</h1>
-            <h2 className="my-4 ps-3 login-title"><span className="pe-3"><FontAwesomeIcon icon={faDoorOpen} /></span>Login</h2>
+            <h2 className="my-4 ps-3 login-title"><span className="pe-3"><FontAwesomeIcon icon={faArrowCircleRight} /></span>Login</h2>
             <Form onSubmit={onSubmit}>
                 <Form.Group>
                     <Form.Control className="m-2" type="text" placeholder="Group Name" onChange={onChange} />
