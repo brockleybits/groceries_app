@@ -12,7 +12,7 @@ module.exports = function(passport) {
     passport.use(new LocalStrategy((username, password, done) => {
 
         sequelize.query(
-            "SELECT * FROM user WHERE username = :username", {
+            "SELECT * FROM \"user\" WHERE username = :username", {
                 replacements:{
                     username
                 },

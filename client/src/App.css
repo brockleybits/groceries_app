@@ -3,7 +3,6 @@
 }
 
 .login-background {
-    background-image: url("http://localhost:3000/images/grocery_bag.png");
     background-size: 80%;
     background-repeat: no-repeat;
     background-position: bottom center;
@@ -28,6 +27,10 @@
 
 .icon-size {
     font-size: 2em;
+}
+
+.icon-col-min-width {
+    min-width: fit-content;
 }
 
 .store-font {

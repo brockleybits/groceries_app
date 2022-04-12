@@ -32,7 +32,7 @@ exports.selectAll = (req,res) => {
 
     Promise.all([selectIds, selectCategories, selectStores])
         .then(result => res.json(result))
-        .catch(err => console.log('Server-side SELECT Results Error: ' + err));
+        .catch(err => console.log('*** ERROR  *** Server-side SELECT Results Error: ' + err));
 }
 
 
@@ -57,7 +57,7 @@ exports.deleteItem = (req,res) => {
         )
     })
     .then(result => res.json(result))
-    .catch(err => console.log(`Server-side DELETE Error: ${err}`));
+    .catch(err => console.log(`*** ERROR  *** Server-side DELETE Error: ${err}`));
 
 }
 
@@ -65,18 +65,19 @@ exports.deleteItem = (req,res) => {
 exports.insertItem = (req,res) => {
 
     sequelize.query(
-        "INSERT INTO item VALUES (:user, null, :name, :category_id, 0);", {
+        "INSERT INTO item(user_username,item_name,category_id,selected) VALUES (:user, :name, :category_id, 0) RETURNING id;", {
             replacements: {
                 user: req.user,
                 name: req.body.name,
                 category_id: req.body.category_id,
             },
-            type: QueryTypes.POST
+            type: QueryTypes.POST,
+            raw: true
         }
     )
     .then((result) => {
         let user = req.user;
-        let item_id = result[0];
+        let item_id = result[0][0].id;
         for (let store_id of req.body.store_id) {
             sequelize.query(
                 "INSERT INTO store_item VALUES (:user, :store_id, :item_id);", {
@@ -89,11 +90,11 @@ exports.insertItem = (req,res) => {
                 }
             )
             .then(() => console.log(`Item ID ${item_id} added to Store ID ${store_id}`))
-            .catch(err => console.log('Server-side Store_Item Table INSERT Results Error: ' + err));
+            .catch(err => console.log('*** ERROR  *** Server-side Store_Item Table INSERT Results Error: ' + err));
         }
         res.json(result);
     })
-    .catch(err => console.log('Server-side Item Table INSERT Results Error: ' + err));
+    .catch(err => console.log('*** ERROR  *** Server-side Item Table INSERT Results Error: ' + err));
 }
 
 // SELECT Item info
@@ -119,7 +120,7 @@ exports.getItem = (req,res) => {
 
     Promise.all([selectInfo, selectStoreIds])
         .then(result => res.json(result))
-        .catch(err => console.log('Server-side SELECT Item Info Results Error: ' + err));
+        .catch(err => console.log('*** ERROR  *** Server-side SELECT Item Info Results Error: ' + err));
 }
 
 
@@ -154,7 +155,7 @@ exports.updateItem = (req,res) => {
                     }
                 )
                 .then(() => console.log(`Item ID ${item_id} added to Store ID ${store_id}`))
-                .catch(err => console.log('Server-side Store_Item Table INSERT Error: ' + err));
+                .catch(err => console.log('*** ERROR  *** Server-side Store_Item Table INSERT Error: ' + err));
             }
         }
 
@@ -170,13 +171,13 @@ exports.updateItem = (req,res) => {
                     }
                 )
                 .then(() => console.log(`Item ID ${item_id} and Store ID ${store_id} deleted.`))
-                .catch(err => console.log('Server-side Store_Item Table DELETE Error: ' + err));
+                .catch(err => console.log('*** ERROR  *** Server-side Store_Item Table DELETE Error: ' + err));
             }
         }
 
         res.json(result);
     })
-    .catch(err => console.log('Server-side Item Table INSERT Results Error: ' + err));
+    .catch(err => console.log('*** ERROR  *** Server-side Item Table INSERT Results Error: ' + err));
 }
 
 
@@ -190,7 +191,7 @@ exports.deselectItems = (req,res) => {
     else deselect = req.body.deselect;
 
     sequelize.query(
-        "UPDATE item SET selected = 0 WHERE id IN (:id)", {
+        "UPDATE item SET selected = 0 WHERE id IN (:id);", {
             replacements: {
                 id: deselect
             },
@@ -198,5 +199,5 @@ exports.deselectItems = (req,res) => {
         }
     )
     .then((result) => res.json(result))
-    .catch(err => console.log('Server-side Results Error: ' + err));
+    .catch(err => console.log('*** ERROR  *** Server-side Results Error: ' + err));
 }

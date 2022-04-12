@@ -7,7 +7,7 @@ const { QueryTypes} = require('sequelize');
 exports.selectStores = (req,res) => {
 
     sequelize.query(
-        "SELECT * FROM store WHERE user_username = :user", {
+        "SELECT * FROM store WHERE user_username = :user;", {
             replacements: {
                 user: req.user
             },
@@ -15,13 +15,13 @@ exports.selectStores = (req,res) => {
         }
     )
     .then(result => res.json(result))
-    .catch(err => console.log('Server-side SELECT Stores Results Error: ' + err));
+    .catch(err => console.log('*** ERROR  *** Server-side SELECT Stores Results Error: ' + err));
 }
 
 exports.insertStore = (req,res) => {
 
     sequelize.query(
-        "INSERT INTO store VALUES (:user, null, :store_name, :neighborhood);", {
+        "INSERT INTO store(user_username,store_name,neighborhood) VALUES (:user, :store_name, :neighborhood);", {
             replacements: {
                 user: req.user,
                 store_name: req.body.store_name,
@@ -31,7 +31,7 @@ exports.insertStore = (req,res) => {
         }
     )
     .then((result) => res.json(result))
-    .catch(err => console.log('Server-side Store Table INSERT Results Error: ' + err));
+    .catch(err => console.log('*** ERROR  *** Server-side Store Table INSERT Results Error: ' + err));
 }
 
 exports.deleteStore = (req,res) => {
@@ -39,7 +39,7 @@ exports.deleteStore = (req,res) => {
     let store_id = req.body.id;
 
     sequelize.query(
-        "SELECT item_id FROM store_item WHERE store_id = :store_id", {
+        "SELECT item_id FROM store_item WHERE store_id = :store_id;", {
             replacements: {
                 store_id
             },
@@ -55,7 +55,7 @@ exports.deleteStore = (req,res) => {
             for (item of itemIdArray) itemList.push(item.item_id);
     
             const storeItems = sequelize.query(
-                "SELECT item_id, COUNT(item_id) = 1 AS 'unique' FROM store_item WHERE item_id IN (:itemList) GROUP BY item_id;", {
+                "SELECT item_id, COUNT(item_id) AS unique FROM store_item WHERE item_id IN (:itemList) GROUP BY item_id;", {
                     replacements: {
                         itemList
                     },
@@ -74,7 +74,7 @@ exports.deleteStore = (req,res) => {
         let uniqueItemIds = [];
         
         for (item of scannedItems) {
-            if (item.unique === 1) uniqueItemIds.push(item.item_id);
+            if (item.unique === '1') uniqueItemIds.push(item.item_id);
         }
 
         sequelize.query(
@@ -119,6 +119,6 @@ exports.deleteStore = (req,res) => {
 
     })
     .then((result) => res.json(result))
-    .catch(err => console.log(`Server-side DELETE Error: ${err}`));
+    .catch(err => console.log(`*** ERROR  *** Server-side DELETE Error: ${err}`));
 
 }

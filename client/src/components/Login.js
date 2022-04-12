@@ -73,7 +73,12 @@ const Login = () => {
     }, [alert]);
 
     return (
-        <Container className="max-container-width login-background login-height">
+        <Container
+            className="max-container-width login-background login-height"
+            style={{ 
+                    backgroundImage: `url(${process.env.PUBLIC_URL + '/images/grocery_bag.png'})` 
+                }}
+        >
             {
                 alert.alert &&
                 <Alert variant={alert.variant}>{alert.message}</Alert>

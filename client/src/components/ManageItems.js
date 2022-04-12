@@ -145,6 +145,12 @@ const ManageItems = () => {
                     category_id: null,
                     store_id: []
                 });
+                localStorage.setItem('alert', JSON.stringify({
+                    alert: true,
+                    message: "Item updated!",
+                    variant: "success"
+                }));
+                window.location.reload();
             })
             .catch(err => console.log(`Client-side UPDATE ITEM error: ${err}`));
     }
@@ -199,7 +205,7 @@ const ManageItems = () => {
                     <ListGroup.Item key={item.id}>
                         <div className="d-flex align-items-center">
                             <div className="me-auto">{item.item_name}</div>
-                            <div>
+                            <div className="icon-col-min-width">
                                 <Button
                                     className="me-2"
                                     variant="outline-success"

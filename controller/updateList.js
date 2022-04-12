@@ -6,7 +6,7 @@ const { QueryTypes} = require('sequelize');
 // SELECT all Categories and Items info
 exports.selectItemCategories = (req,res) => {
     sequelize.query(
-        "SELECT c.id AS 'category_id', c.category_name AS 'category_name', i.id AS 'item_id', i.item_name AS 'item_name', i.selected AS 'selected' FROM item i JOIN category c ON i.category_id = c.id WHERE i.user_username = :user ORDER BY c.id;", {
+        "SELECT c.id AS category_id, c.category_name AS category_name, i.id AS item_id, i.item_name AS item_name, i.selected AS selected FROM item i JOIN category c ON i.category_id = c.id WHERE i.user_username = :user ORDER BY c.id;", {
             replacements: {
                 user: req.user
             },
@@ -14,7 +14,7 @@ exports.selectItemCategories = (req,res) => {
         }
     )
     .then(result => res.json(result))
-    .catch(err => console.log('Server-side Results Error: ' + err));
+    .catch(err => console.log('*** ERROR  *** Server-side Results Error: ' + err));
 }
 
 // UPDATE Items to reflect selections
@@ -51,6 +51,6 @@ exports.updateItemSelections = (req,res) => {
 
     Promise.all([unselectItems, selectItems])
     .then(result => res.json(result))
-    .catch(err => console.log('Server-side Results Error: ' + err));
+    .catch(err => console.log('*** ERROR  *** Server-side Results Error: ' + err));
 }
 
