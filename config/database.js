@@ -3,7 +3,10 @@ const Sequelize = require('sequelize');
 
 // HEROKU
 module.exports = new Sequelize(process.env.DATABASE_URL, {
-    native: true
+    dialect: 'postgres',
+    dialectOptions: {
+        ssl: true
+    }
 });
 
 // LOCAL MYSQL
