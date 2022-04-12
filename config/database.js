@@ -2,7 +2,9 @@
 const Sequelize = require('sequelize');
 
 // HEROKU
-module.exports = new Sequelize(process.env.DATABASE_URL);
+module.exports = new Sequelize(process.env.DATABASE_URL, {
+    native: true
+});
 
 // LOCAL MYSQL
 // module.exports = new Sequelize('groceries', process.env.DB_USER, process.env.DB_PASSWORD, {
