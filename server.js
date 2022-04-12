@@ -42,11 +42,9 @@ app.use(cors({
 
 
 app.use(session({
-    store: process.env.NODE_ENV === "production"
-        ? new RedisStore({
+    store: new RedisStore({
                 url: process.env.REDIS_URL
-            })
-        : null,
+            }),
     secret: process.env.CREDENTIAL_SECRET,
     resave: false,
     saveUninitialized: false
