@@ -4,7 +4,18 @@ const path = require('path');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+
+
+// Redis Configuration
+const { createClient } = require('redis');
+const redisClient = createClient({
+    url: process.env.REDIS_URL
+});
+redisClient.connect().catch(console.error);
 const RedisStore = require('connect-redis')(session);
+
+
+// Development .env
 require('dotenv').config();
 
 
@@ -43,7 +54,7 @@ app.use(cors({
 
 app.use(session({
     store: new RedisStore({
-                url: process.env.REDIS_URL
+                client: redisClient
             }),
     secret: process.env.CREDENTIAL_SECRET,
     resave: false,
