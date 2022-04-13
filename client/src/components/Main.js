@@ -64,16 +64,16 @@ const Main = () => {
                     toggleDeselect={toggleDeselectComplete}
                 />
             </Route>
-            <Route path="/update-list">
+            <Route path="/shopping-list">
                 <UpdateList
                     deselectComplete={deselectComplete}
                     toggleDeselect={toggleDeselectComplete}
                 />
             </Route>
-            <Route path="/items">
+            <Route path="/manage-items">
                 <ManageItems />
             </Route>
-            <Route path="/stores">
+            <Route path="/manage-stores">
                 <ManageStores />
             </Route>
         </Container>

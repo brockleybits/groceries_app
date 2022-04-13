@@ -32,9 +32,9 @@ const NavMenu = () => {
                 <Navbar.Toggle className="pe-2" aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
-                        <Nav.Link href="/update-list" className="mt-2 pe-3 text-uppercase">Shopping List</Nav.Link>
-                        <Nav.Link href="/items" className="mt-2 pe-3 text-uppercase">Manage Items</Nav.Link>
-                        <Nav.Link href="/stores" className="mt-2 text-uppercase">Manage Stores</Nav.Link>
+                        <Nav.Link href="/shopping-list" className="mt-2 pe-3 text-uppercase">Shopping List</Nav.Link>
+                        <Nav.Link href="/manage-items" className="mt-2 pe-3 text-uppercase">Manage Items</Nav.Link>
+                        <Nav.Link href="/manage-stores" className="mt-2 text-uppercase">Manage Stores</Nav.Link>
                         <Button className="my-3 mx-4" onClick={onClick} >Logout</Button>
                     </Nav>
                 </Navbar.Collapse>
