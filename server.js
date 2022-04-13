@@ -5,14 +5,14 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 
-// const FileStore = require('session-file-store');
+const FileStore = require('session-file-store')(session);
 
 // Redis Configuration
-const redis = require('redis');
-const client = redis.createClient({
-        url: process.env.REDIS_URL
-    });
-const RedisStore = require('connect-redis')(session);
+// const redis = require('redis');
+// const client = redis.createClient({
+//         url: process.env.REDIS_URL
+//     });
+// const RedisStore = require('connect-redis')(session);
 
 
 // Development .env
@@ -53,7 +53,7 @@ app.use(cors({
 
 
 app.use(session({
-    store: new RedisStore({client}),
+    store: new FileStore(),
     secret: process.env.CREDENTIAL_SECRET,
     resave: false,
     saveUninitialized: false
