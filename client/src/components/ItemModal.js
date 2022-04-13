@@ -87,6 +87,12 @@ const onSubmit = (evt) => {
     }
 }
 
+const closeModal = () => {
+    setItemName('');
+    setCategoryId(null);
+    setStoresChecked({});
+    toggleModal();
+}
 
 React.useEffect(() => {
     if (alert.alert) {
@@ -103,7 +109,7 @@ React.useEffect(() => {
 
 
     return (
-        <Modal show={modalOpen} onHide={toggleModal}>
+        <Modal show={modalOpen} onHide={closeModal}>
             <Modal.Dialog>
                 {
                     alert.alert ?

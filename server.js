@@ -1,4 +1,22 @@
-// Imports
+// *************************************************************
+//
+//  ---- GROCERIES APP ----
+//  Coded by: Todd Brotze
+//  Version: 1.0 (12 April, 2022 10:00pm PDT)
+//
+//  Files to modify to run in LOCAL or HEROKU environments:
+//      - client/src/axios/Axios-Config: baseURL
+//      - config/database: dB instance
+//      - server: FileStore
+//
+// *************************************************************
+
+
+
+// ----------  IMPORTS & INSTANTIATIONS ---------------
+
+
+
 const Express = require('express');
 const path = require('path');
 const cors = require('cors');
@@ -42,6 +60,7 @@ dB.authenticate()
 // ----------  MIDDLEWARE ---------------
 
 
+
 app.use(Express.json());
 app.use(Express.urlencoded({extended: true}));
 app.use(cookieParser(process.env.CREDENTIAL_SECRET));
@@ -56,23 +75,28 @@ app.use(session({
     store: new FileStore(),
     secret: process.env.CREDENTIAL_SECRET,
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 1800000
+    }
 }));
+
 
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Faux Get call returned to Server (:5000)
-// app.get('/', (req,res,next) => {
-//     res.send(req.session);
-//     next();
-// });
 
 app.use('/current-list', require('./routes/currentList'));
 app.use('/update-list', require('./routes/updateList'));
 app.use('/stores', require('./routes/manageStores'));
 app.use('/items', require('./routes/manageItems'));
 app.use('/login', require('./routes/login'));
+
+
+
+// ----------  EXECUTION ---------------
+
+
 
 // Serve static assets if in PRODUCTION
 if (process.env.NODE_ENV === 'production') {

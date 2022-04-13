@@ -45,7 +45,17 @@ const ManageItems = () => {
         variant: null
     });
 
-    const toggleModal = () => setModalOpen(!modalOpen);
+    const toggleModal = () => {
+        if (modalOpen && editMode.id !== null) {
+            setEditMode({
+                id: null,
+                item_name: null,
+                category_id: null,
+                store_id: []
+            });
+        }
+        setModalOpen(!modalOpen);
+    };
     
     React.useEffect(() => {
         axiosRequest.getAll()
