@@ -5,13 +5,13 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 
+// const FileStore = require('session-file-store');
 
 // Redis Configuration
-const { createClient } = require('redis');
-const redisClient = createClient({
-    url: process.env.REDIS_URL
-});
-redisClient.connect().catch(console.error);
+const redis = require('redis');
+const client = redis.createClient({
+        url: process.env.REDIS_URL
+    });
 const RedisStore = require('connect-redis')(session);
 
 
@@ -53,9 +53,7 @@ app.use(cors({
 
 
 app.use(session({
-    store: new RedisStore({
-                client: redisClient
-            }),
+    store: new RedisStore({client}),
     secret: process.env.CREDENTIAL_SECRET,
     resave: false,
     saveUninitialized: false
