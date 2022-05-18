@@ -15,7 +15,9 @@ import Badge from 'react-bootstrap/Badge';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faUndo} from '@fortawesome/free-solid-svg-icons';
 
-// Current List of selected items and their corresponding stores, organized by store_id...
+// Current List of stores and their respective selected items.
+// Stores are initially sorted by most selected items to least.
+
 const CurrentList = () => {
 
     const [storeInfo, setStoreInfo] = React.useState([]);
