@@ -9,6 +9,7 @@ const bcrypt = require('bcryptjs');
 
 module.exports = function(passport) {
 
+
     passport.use(new LocalStrategy((username, password, done) => {
 
         sequelize.query(

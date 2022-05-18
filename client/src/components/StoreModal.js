@@ -1,29 +1,33 @@
 // React
 import React from 'react';
 
-// Import Axios calls
-// import axiosRequest from '../axios/ManageItems';
-
-// Import Category Order
-// import categoryOrder from '../config/category_order';
-
 // Bootstrap and CSS
-import 'bootstrap/dist/css/bootstrap.min.css';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
-import '../App.css';
 
-// FontAwesome
-// import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-// import {faTrash} from '@fortawesome/free-solid-svg-icons';
 
 // StoreList componenet
-const StoreModal = ({ modalOpen, toggleModal, stores, newStore }) => {
+const StoreModal = ({ modalOpen, toggleModal, stores, newStore, editMode, editStore }) => {
 
 const [storeName, setStoreName] = React.useState('');
 const [neighborhood, setNeighborhood] = React.useState('');
+const [modalTitle, setModalTitle] = React.useState('Add Store');
+const [alert, setAlert] = React.useState({
+    alert: false,
+    message: null,
+    variant: null
+});
+
+
+React.useEffect(() => {
+    if (editMode.store_id) {
+        setStoreName(editMode.store_name);
+        setNeighborhood(editMode.neighborhood);
+        setModalTitle('Edit Store');
+    }
+}, [editMode]);
 
 
 const onChange = (evt) => {
@@ -34,24 +38,57 @@ const onChange = (evt) => {
 
 const onSubmit = (evt) => {
     evt.preventDefault();
-
-    let okayToSubmit = true;
-
-    for (let store of stores) {
-        if (store.store_name + store.neighborhood === storeName + neighborhood) okayToSubmit = false;
-    }
-
-    if (okayToSubmit) {
-        toggleModal();
-        newStore(storeName, neighborhood);
+    
+    if (editMode.store_id) {
+        editStore(storeName.trim(), neighborhood.trim());
+        closeModal();
+    } else {
+        let okayToSubmit = true;
+        for (let store of stores) {
+            if (store.store_name + store.neighborhood === storeName.trim() + neighborhood.trim()) {
+                okayToSubmit = false;
+                setAlert({
+                    alert: true,
+                    message: "Store already exists.",
+                    variant: "danger"
+                });
+            }
+        }
+        if (okayToSubmit) {
+            newStore(storeName.trim(), neighborhood.trim());
+            closeModal();
+        }
     }
 }
 
+
+const closeModal = () => {
+    setStoreName('');
+    setNeighborhood('');
+    setModalTitle('Add Store');
+    toggleModal();
+}
+
+
+React.useEffect(() => {
+    if (alert.alert) {
+        localStorage.removeItem('alert');
+        setTimeout(() => {
+            setAlert({
+                alert: false,
+                message: null,
+                variant: null
+            });
+        }, 2000);
+    }
+}, [alert]);
+
+
     return (
-        <Modal show={modalOpen} onHide={toggleModal}>
+        <Modal show={modalOpen} onHide={closeModal}>
             <Modal.Dialog>
                 <Modal.Header closeButton>
-                    <Modal.Title className="text-uppercase">Add Store</Modal.Title>
+                    <Modal.Title className="text-uppercase">{modalTitle}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form onSubmit={onSubmit}>
@@ -60,6 +97,7 @@ const onSubmit = (evt) => {
                                 type="text"
                                 name="store_name"
                                 placeholder="Enter Store Name"
+                                defaultValue={editMode.store_name}
                                 onChange={onChange}
                                 required
                             />
@@ -69,6 +107,7 @@ const onSubmit = (evt) => {
                                 className="mt-4"
                                 name="neighborhood"
                                 placeholder="Enter Neighborhood"
+                                defaultValue={editMode.neighborhood}
                                 onChange={onChange}
                                 required
                             />

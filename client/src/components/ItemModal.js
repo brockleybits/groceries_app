@@ -1,14 +1,7 @@
 // React
 import React from 'react';
 
-// Import Axios calls
-// import axiosRequest from '../axios/ManageItems';
-
-// Import Category Order
-// import categoryOrder from '../config/category_order';
-
 // Bootstrap and CSS
-import 'bootstrap/dist/css/bootstrap.min.css';
 import Container from 'react-bootstrap/Container';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
@@ -16,15 +9,15 @@ import FormCheck from 'react-bootstrap/FormCheck';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
-import '../App.css';
 
 
 // StoreList componenet
-const ItemModal = ({ modalOpen, toggleModal, categories, stores, newItem, editMode, editItem, firstCategoryId }) => {
+const ItemModal = ({ modalOpen, toggleModal, categories, stores, addItem, editMode, editItem, firstCategoryId }) => {
 
 const [itemName, setItemName] = React.useState('');
 const [categoryId, setCategoryId] = React.useState(null);
 const [storesChecked, setStoresChecked] = React.useState({});
+const [modalTitle, setModalTitle] = React.useState('Add Item');
 const [alert, setAlert] = React.useState({
     alert: false,
     message: null,
@@ -43,6 +36,7 @@ React.useEffect(() => {
         }
         setCategoryId(editMode.category_id);
         setItemName(editMode.item_name);
+        setModalTitle('Edit Item');
     }
 
     setStoresChecked(storeIdObj);
@@ -70,14 +64,14 @@ const onSubmit = (evt) => {
     if (!!storeIds.length) {
 
         if (editMode.id) {
-            editItem(itemName, categoryId, storeIds);
+            editItem(itemName.trim(), categoryId, storeIds);
         } else {
             let catId = categoryId;
             if (!catId) catId = firstCategoryId;
-            newItem(itemName, catId, storeIds);
+            addItem(itemName.trim(), catId, storeIds);
         }
 
-        toggleModal();
+        closeModal();
     } else {
         setAlert({
             alert: true,
@@ -91,6 +85,7 @@ const closeModal = () => {
     setItemName('');
     setCategoryId(null);
     setStoresChecked({});
+    setModalTitle('Add Item');
     toggleModal();
 }
 
@@ -118,7 +113,7 @@ React.useEffect(() => {
                         null
                 }
                 <Modal.Header closeButton>
-                    <Modal.Title className="text-uppercase">Add Item</Modal.Title>
+                    <Modal.Title className="text-uppercase">{modalTitle}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form onSubmit={onSubmit}>
@@ -152,25 +147,27 @@ React.useEffect(() => {
                             </Form.Select>
                             <Form.Text className="text-danger">(Required)</Form.Text>
                             <Container className="mt-4">
-                                <span className="pe-3 fs-3"><strong>Available at:</strong></span>
+                                <span className="pe-3 fs-3">Available at:</span>
                                 <Form.Text className="text-danger">(Required)</Form.Text>
                                 {
                                     stores.map((store,index) =>
                                         <FormCheck className="d-flex align-items-center my-3" key={index}>
-                                            <FormCheck.Input
-                                                className="my-2"
-                                                type="checkbox"
-                                                name="store"
-                                                id={`Store-${store.id}`}
-                                                value={store.id}                                              
-                                                defaultChecked={storesChecked[store.id]}
-                                                onChange={updateStoresChecked}
-                                            />
                                             <FormCheck.Label
+                                                className="checkbox-container"
                                                 htmlFor={`Store-${store.id}`}
                                             >
-                                                <span className="ps-2 fs-5">{store.store_name}</span>
-                                                <span className="ps-2 fs-6 text-secondary">{store.neighborhood}</span>
+                                                <p>                                                    
+                                                    <span className="modal-store-name">{store.store_name}</span>
+                                                    <span className="modal-store-neighborhood">{store.neighborhood}</span>
+                                                </p>
+                                                <FormCheck.Input
+                                                    type="checkbox"
+                                                    id={`Store-${store.id}`}
+                                                    value={store.id}
+                                                    defaultChecked={storesChecked[store.id]}
+                                                    onChange={updateStoresChecked}
+                                                />
+                                                <span className="checkmark"></span>
                                             </FormCheck.Label>
                                         </FormCheck>
                                         )

@@ -1,3 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400&display=swap');
+
+ul, li {
+    margin: 0;
+    padding: 0;
+}
+
 .max-container-width {
     max-width: 720px;
 }
@@ -10,6 +17,27 @@
 
 .login-height {
     height: 90vh;
+}
+
+.welcome-masthead {
+    background-color: slategrey;
+    padding: 10px 0 10px 0;
+}
+
+.welcome-masthead h1 {
+    color: white;
+    font-family: "Montserrat";
+    font-size: 2.2em;
+    font-weight: 400;
+    text-align: center;
+    line-height: 0.85em;
+}
+
+.welcome-masthead h1 > span {
+    font-size: 0.6em;
+    font-weight: 100;
+    text-transform: lowercase;
+    letter-spacing: 4px;
 }
 
 .login-heading {
@@ -25,6 +53,10 @@
     background-color: white;
 }
 
+.no-info-alert {
+    text-align: center;
+}
+
 .icon-size {
     font-size: 2em;
 }
@@ -33,12 +65,138 @@
     min-width: fit-content;
 }
 
+.item-button {
+    border: none;
+    font-size: 0.8em;
+}
+
 .store-font {
-    font-size: 1.1em;
-    font-weight: 700;
+    font-size: 0.9em;
+    font-weight: 600;
+    padding-top: 7px;
 }
 
 .neighborhood-font {
-    font-size: 0.85em;
-    font-weight: 400;
+    font-size: 0.7em;
+    font-weight: 300;
 }
+
+.category-title {
+    padding-top: 7px;
+    margin-top: 4px;
+    margin-bottom: 12px;
+    border: solid 1px #2196F3;
+    border-radius: 28px;
+}
+
+.category-title h2{
+    /* background-color: rgb(111, 125, 159); */
+    color:#2196F3;
+    text-transform: uppercase;
+    font-size: 0.85em;
+    font-weight: 500;
+    text-align: center;
+}
+
+.item-text {
+    font-size: 0.95em;
+}
+
+.search-div {
+    position: relative;
+}
+
+.search-x {
+    background-color: white;
+    border: none;
+    color: grey;
+    font-size: 1.25em;
+    position: absolute;
+    right: 0;
+    margin: 4px 4px 0 0;
+    padding: 0 10px 0 10px;
+}
+
+.search-x:hover,
+.search-x:active,
+.search-x:focus {
+    background: none;
+    color: #777;
+    border: none;
+}
+
+.modal-store-name {
+    font-size: 1.1em;
+    font-weight: bolder;
+    margin-right: 8px;
+}
+
+.modal-store-neighborhood {
+    font-size: 0.8em;
+    color: grey;
+}
+
+/* Customize the label (the container) */
+.checkbox-container {
+    display: block;
+    position: relative;
+    padding-left: 36px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+  
+/* Customize the label (text) */
+.checkbox-container p {
+    font-size: 0.9em;
+}
+
+/* Hide the browser's default checkbox */
+.checkbox-container input {
+    display: none;
+    /* opacity: 0;
+    height: 0;
+    width: 0; */
+}
+  
+  /* Create a custom checkbox */
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #ddd;
+    cursor: pointer;
+  }
+  
+  /* When the checkbox is checked, add a blue background */
+  .checkbox-container input:checked ~ .checkmark {
+    background-color: #2196F3;
+  }
+  
+  /* Create the checkmark/indicator (hidden when not checked) */
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  
+  /* Show the checkmark when checked */
+  .checkbox-container input:checked ~ .checkmark:after {
+    display: block;
+  }
+  
+  /* Style the checkmark/indicator */
+  .checkbox-container .checkmark:after {
+    top: 3px;
+    left: 9px;
+    width: 8px;
+    height: 14px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }

@@ -2,12 +2,10 @@
 import React from 'react';
 
 // Bootstrap and CSS
-import 'bootstrap/dist/css/bootstrap.min.css';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
-import '../App.css';
 
 // FontAwesome
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
@@ -36,7 +34,7 @@ const Login = () => {
         evt.preventDefault();
         if (!!username.length && !!password.length) {
             axiosRequest.verifyLogin({
-                username,
+                username: username.trim().toLowerCase(),
                 password
             })
             .then(result => {

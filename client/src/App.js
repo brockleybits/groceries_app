@@ -13,7 +13,14 @@ import NavMenu from './components/NavMenu';
 const App = () => {
     return (
         <div>
-            <NavMenu />
+            {
+                window.location.pathname === '/' ? 
+                    <div className="welcome-masthead">
+                        <h1><span>Welcome to</span><br />Groceries</h1>
+                    </div>
+                     : 
+                     <NavMenu />
+            }
             <div className="container-fluid">
                 <Main />
             </div>

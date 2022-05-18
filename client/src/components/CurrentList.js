@@ -4,145 +4,135 @@ import React from 'react';
 // Import Axios calls
 import axiosRequest from '../axios/CurrentList';
 
-// Import compute functions
-// import { mapIds } from '../compute/map_ids';
-
 // Bootstrap and CSS
-import 'bootstrap/dist/css/bootstrap.min.css';
 import Container from 'react-bootstrap/Container';
 import Accordion from 'react-bootstrap/Accordion';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import Badge from 'react-bootstrap/Badge';
-import '../App.css';
 
 // FontAwesome
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faUndo, faCheck} from '@fortawesome/free-solid-svg-icons';
+import {faUndo} from '@fortawesome/free-solid-svg-icons';
 
 // Current List of selected items and their corresponding stores, organized by store_id...
-const CurrentList = ({ deselectComplete, toggleDeselect }) => {
+const CurrentList = () => {
 
-    const [verified, setVerified] = React.useState(false);
-    const [storeItemsTable, setStoreItemsTable] = React.useState([]);
     const [storeInfo, setStoreInfo] = React.useState([]);
+    const [storeOrder, setStoreOrder] = React.useState([]);
     const [undoStack, setUndoStack] = React.useState([]);
+    const [noInfo, setNoInfo] = React.useState(false);
+    const [alert, setAlert] = React.useState({
+        alert: false,
+        message: null,
+        variant: null
+    });
     
+
     React.useEffect(() => {
-        console.log('Executing initial Current List useEffect...');
-        if (deselectComplete) {
-            localStorage.removeItem('unselectedItemIds');
-            console.log('Requesting Current List from dB...');
-            axiosRequest.getAll()
-                .then(res => {
-                    setVerified(true);
-                    setStoreItemsTable(res.data);
-                    console.log('Current List successfully queried!');
-                    toggleDeselect();
-                })
-                .catch(err => {
-                    console.log(err);
-                    window.location.pathname = '/';
+        axiosRequest.getAll()
+            .then(result => {
+                setStoreInfo(result.data[0]);
+                if (result.data[0].length === 0) setNoInfo(true);
+                setStoreOrder(result.data[1]);
+            })
+            .catch(err => {
+                console.log(err);
+                window.location.pathname = '/';
+            });
+
+    }, []);
+
+
+    const updateSelection = (item_id, undo) => {
+        if (undo && undoStack.length === 0) return;
+        if (undo) item_id = undoStack[undoStack.length-1];
+        let value = undo ? 1 : 0;
+        axiosRequest.updateItemSelection({
+            item_id,
+            value,
+            store_order: storeOrder
+        })
+        .then((result) => {
+            let newUndoStack = undo ? undoStack.filter(id => id !== item_id) : [...undoStack, item_id];
+            setUndoStack(newUndoStack);
+            setTimeout(() => {
+                if (result.data.length === 0) setNoInfo(true);
+                setStoreInfo(result.data);
+            }, 220);
+        })
+        .catch(() => setAlert({
+            alert: true,
+            message: "Network Error",
+            variant: "danger"
+        }));
+    }
+
+
+    React.useEffect(() => {
+        if (alert.alert) {
+            setTimeout(() => {
+                setAlert({
+                    alert: false,
+                    message: null,
+                    variant: null
                 });
+            }, 1500);
         }
-    }, [deselectComplete, toggleDeselect]);
+    }, [alert]);
 
-
-    React.useEffect(() => {
-
-        let storeObject = {};
-        for (let row of storeItemsTable) {
-            if (storeObject[row.store_id]) {
-                storeObject[row.store_id].item_id.push(row.item_id);
-                storeObject[row.store_id].item_name.push(row.item_name);
-            } else {
-                storeObject[row.store_id] = {
-                    store_id: row.store_id,
-                    store_name: row.store_name,
-                    neighborhood: row.neighborhood,
-                    item_id: [row.item_id],
-                    item_name: [row.item_name]
-                }
-            }
-        }
-
-        let storeArray = [];
-        for (let id of Object.keys(storeObject)) {
-            storeArray.push(storeObject[id]);
-        }
-
-        setStoreInfo(storeArray);
-
-    }, [storeItemsTable]);
-
-
-    const removeItem = (val) => {
-
-        console.log(`Removing value: ${val}`);
-
-        let currentUndo = storeItemsTable.filter(item => item.item_id === val);
-        setUndoStack(undoStack.concat(currentUndo));
-
-        if (localStorage.unselectedItemIds) {
-            let currentStorage = JSON.parse(localStorage.unselectedItemIds);
-            currentStorage.push(val);
-            localStorage.setItem('unselectedItemIds', JSON.stringify(currentStorage));
-        } else {
-            let newStorageArray = [val];
-            localStorage.setItem('unselectedItemIds', JSON.stringify(newStorageArray));
-        }
-
-        let revisedArray = storeItemsTable.filter(item => item.item_id !== val);
-        setStoreItemsTable(revisedArray);
-    }
-
-    const popUndoStack = () => {
-        if (!!undoStack.length) {
-
-            let id = undoStack[undoStack.length-1].item_id;
-            let tempItems = undoStack.filter(item => item.item_id === id);
-            setStoreItemsTable(storeItemsTable.concat(tempItems));
-            setUndoStack(undoStack.filter(item => item.item_id !== id));
-
-            let currentStorage = JSON.parse(localStorage.unselectedItemIds);
-            currentStorage.pop();
-            localStorage.setItem('unselectedItemIds', JSON.stringify(currentStorage));
-        }
-    }
 
     return (
 
-        <Container className="max-container-width">
-            {   verified &&
-                <Button variant="warning" size="lg" className="my-3" onClick={popUndoStack}><FontAwesomeIcon icon={faUndo}/></Button>
+        <Container className="py-4 max-container-width">
+            {
+                noInfo ?
+                <div className="no-info-alert">
+                    <h1>Add Items</h1>
+                    <p>Looks like you don't have any items to shop for. Head on over to <a href="/shopping-list">Shopping List</a> to add items.</p>
+                </div>
+                :
+                <Button 
+                    variant="warning"
+                    size="lg"
+                    className="mb-3"
+                    onClick={() => updateSelection(null,true)}
+                    ><FontAwesomeIcon icon={faUndo}/>
+                </Button>
             }
             <Accordion>
                 { storeInfo.map((store, index) => 
-                    <Accordion.Item eventKey={index} key={store.store_id.toString() + index.toString()}>
-                        <Accordion.Header>
-                            <span className="store-font">{store.store_name}</span>
-                            <Badge pill bg="success" className="ms-2">{store.item_name.length}</Badge>
-                            <span className="neighborhood-font text-secondary ps-2">{store.neighborhood}</span>
+                    <Accordion.Item className="accordion-item" eventKey={index} key={`store-id-${store.store_id}`}>
+                        <Accordion.Header className="accordion-header">
+                            <h1 className="store-font">{store.store_name}</h1>
+                            <Badge pill bg="success" className="ms-2">{store.store_item_count}</Badge>
+                            <span className="neighborhood-font text-secondary ms-2">{store.neighborhood}</span>
                         </Accordion.Header>
                         <Accordion.Body>
                             {
-                                store.item_name.map((item,index) =>
-                                        <Row key={store.store_id.toString() + store.item_id[index].toString() + index.toString()}>
-                                            <Col xs={2}>
-                                                <Button
-                                                    variant="outline-success"
-                                                    size="sm"
-                                                    className="my-1 float-end"
-                                                    onClick={() => removeItem(store.item_id[index])}
-                                                >
-                                                    <FontAwesomeIcon icon={faCheck}/>
-                                                </Button>
-                                            </Col>
-                                            <Col xs={10} className="d-flex align-items-center">
-                                                <span>{item}</span>
-                                            </Col>
-                                        </Row>
+                                store.categories.map((category) =>
+                                    <div
+                                        key={`store-id-${store.store_id}-category-id-${category.category_id}`}
+                                        className="pb-3"
+                                    >
+                                        <Row className="category-title"><h2>{category.category_name}</h2></Row>
+                                        {
+                                            category.items.map((item) => 
+                                                <Row className="ps-3 py-0" key={`store-id-${store.store_id}-item-id-${item.item_id}`}>
+                                                    <label
+                                                        className="fs-6 checkbox-container"
+                                                    >
+                                                        <p>{item.item_name}</p>
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => updateSelection(item.item_id,false)}
+                                                        />
+                                                        <span className="checkmark"></span>
+                                                    </label>
+                                                </Row>
+                                            )
+                                        }
+                                    </div>
                                 )
                             }
                         </Accordion.Body>
