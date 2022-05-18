@@ -29,7 +29,7 @@ async function getUserData(user) {
     }
 }
 
-function buildStoreInfoArray(data, storeOrder = null) {
+async function buildStoreInfoArray(data, storeOrder = null) {
     let storeObject = {};
     for (let row of data) {
         if (storeObject[row.store_id]) {
@@ -104,7 +104,7 @@ function buildStoreInfoArray(data, storeOrder = null) {
 exports.currentSelections = async (req,res) => {
     try {
         const allUserData = await getUserData(req.user);
-        const storesArray = buildStoreInfoArray(allUserData);
+        const storesArray = await buildStoreInfoArray(allUserData);
         let storeOrder = storesArray.map(store => store.store_id);
         res.json([storesArray, storeOrder]);
         return;
@@ -128,7 +128,7 @@ exports.itemSelection = async(req,res) => {
             }
         );
         const allUserData = await getUserData(req.user);
-        const storesArray = buildStoreInfoArray(allUserData, req.body.store_order);
+        const storesArray = await buildStoreInfoArray(allUserData, req.body.store_order);
         res.json(storesArray);
         return;
     } catch (err) {
