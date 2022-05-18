@@ -77,10 +77,6 @@ app.use(cors({
 // Express Session for storing Session IDs
 app.use(session({
     store: new FileStore(),
-    // store: new RedisStore({
-    //     client: redisClient
-    // }),
-    // name: 'sid',
     secret: process.env.CREDENTIAL_SECRET,
     resave: false,
     saveUninitialized: false,
