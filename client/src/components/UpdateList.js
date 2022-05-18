@@ -34,7 +34,7 @@ const UpdateList = () => {
     const [itemModalOpen, setItemModalOpen] = React.useState(false);
     const [alertModalOpen, setAlertModalOpen] = React.useState(false);
     const [deleteItemId, setDeleteItemId] = React.useState(null);
-    const [noInfo, setNoInfo] = React.useState(false);
+    // const [noInfo, setNoInfo] = React.useState(false);
     const [editMode, setEditMode] = React.useState({
         id: null,
         item_name: null,

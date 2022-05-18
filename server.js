@@ -152,7 +152,7 @@ app.use('/api/stores', require('./routes/manageStores'));
 
 
 // Write active sessions to localhost:5000
-app.get('/', function(req, res, next) {
-    res.send(req.sessionStore.sessions);
-    next();
-});
+// app.get('/', function(req, res, next) {
+//     res.send(req.sessionStore.sessions);
+//     next();
+// });
