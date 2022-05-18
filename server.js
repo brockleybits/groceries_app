@@ -99,19 +99,6 @@ app.use(function(req,res,next){
 });
 
 
-// ----------  FOR PRODUCTION ---------------
-
-
-
-// Serve static assets if in PRODUCTION
-if (process.env.NODE_ENV === 'production') {
-    app.use(Express.static('client/build'));
-    app.get('*', (req,res) => {
-        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-    })
-}
-
-
 
 // ----------  RUN SERVER ---------------
 
@@ -152,3 +139,17 @@ app.use('/api/stores', require('./routes/manageStores'));
 //     res.send(req.sessionStore.sessions);
 //     next();
 // });
+
+
+
+// ----------  FOR PRODUCTION ---------------
+
+
+
+// Serve static assets if in PRODUCTION
+if (process.env.NODE_ENV === 'production') {
+    app.use(Express.static('client/build'));
+    app.get('*', (req,res) => {
+        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+    })
+}
