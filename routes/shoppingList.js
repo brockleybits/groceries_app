@@ -5,7 +5,7 @@ const router = Express.Router();
 // Connect to dB queries
 const dB = require('../controller/shoppingList');
 
-// Select all Categories and corresponding Items
+// Select all Categories and corresponding Items, and stores
 router.get('/', dB.selectItemCategories);
 
 // Delete Item
@@ -22,10 +22,6 @@ router.post('/edit', dB.editItem);
 
 // Update Item Selection (Select/Deselect)
 router.post('/selection', dB.itemSelection);
-
-// Search Items
-router.post('/search', dB.searchItems);
-
 
 
 module.exports = router;

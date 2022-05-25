@@ -2,7 +2,7 @@ const Express = require('express');
 const router = Express.Router();
 
 // Connect to dB queries
-const dB = require('../controller/currentList');
+const dB = require('../controller/whereTo');
 
 // Select all stores
 router.get('/', dB.currentSelections);

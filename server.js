@@ -2,11 +2,10 @@
 //
 //  ---- GROCERIES APP ----
 //  Coded by: Todd Brotze
-//  Version: 2.0 (17 May, 2022 9:00pm PDT)
+//  Version: 2.1 (25 May, 2022, 9:30am PDT)
 //
 //  Files to modify to run in LOCAL or HEROKU environments:
 //      - client/src/axios/Axios-Config: baseURL
-//      - config/database: dB instance
 //      - server: FileStore
 //
 // *************************************************************
@@ -129,7 +128,7 @@ app.use('/api', function(req,res,next){
 
 
 // API Endpoints
-app.use('/api/current-list', require('./routes/currentList'));
+app.use('/api/where-to', require('./routes/whereTo'));
 app.use('/api/shopping-list', require('./routes/shoppingList'));
 app.use('/api/stores', require('./routes/manageStores'));
 

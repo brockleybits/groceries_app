@@ -1,12 +1,3 @@
 
 heroku pg:psql postgresql-curly-82287 --app get-the-groceries
 
-INSERT INTO category VALUES ('BBY','Bread / Bakery');
-INSERT INTO category VALUES ('PCE','Personal Care');
-
-UPDATE category SET id = 'GOR', category_name = 'Garden / Outdoor' WHERE id = 'GDG';
-
-UPDATE item SET category_id = 'GOR' WHERE category_id = 'GDG';
-UPDATE item SET category_id = 'PCE' WHERE category_id = 'HGE';
-
-DELETE FROM category WHERE id = 'HGE';

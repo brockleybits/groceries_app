@@ -3,7 +3,7 @@ import http from "./Axios-Config";
 
 // Define methods to use in components for http requests to the Functions table
 const getAll = () => {
-  return http.get('/api/shopping-list');
+    return http.get('/api/shopping-list');
 };
 
 const updateItemSelection = itemInfo => {
@@ -13,28 +13,24 @@ const updateItemSelection = itemInfo => {
     });
 }
 
-const searchItems = pattern => {
-    return http.post('/api/shopping-list/search', pattern);
-}
-
 const deleteItem = id => {
     return http.delete('/api/shopping-list', {
         data: {id}
     });
   }
   
-  const addItem = info => {
-      return http.post('/api/shopping-list', info);
+const addItem = info => {
+    return http.post('/api/shopping-list', info);
   }
   
-  const getItem = (id) => {
-      return http.put('/api/shopping-list/edit', {
+const getItem = (id) => {
+    return http.put('/api/shopping-list/edit', {
           data: id
       });
     };
   
-  const editItem = info => {
-      return http.post('/api/shopping-list/edit', info);
+const editItem = info => {
+    return http.post('/api/shopping-list/edit', info);
   }
 
 
@@ -42,7 +38,6 @@ const deleteItem = id => {
 export default {
   getAll,
   updateItemSelection,
-  searchItems,
   deleteItem,
   addItem,
   getItem,

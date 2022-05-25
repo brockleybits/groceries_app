@@ -2,72 +2,31 @@
 const sequelize = require('../config/database');
 const { QueryTypes} = require('sequelize');
 
-// Import Category Order
-const categoryOrder = require('../config/category_order');
-
 // Import Compute functions
-const compareArrays = require('../compute/compare_arrays');
 const addCategoryEmoji = require('../compute/add_category_emoji');
+const buildCategoryArray = require('../compute/build_category_array');
 
 
-async function getCategoryItems(user, search='') {
+async function getCategoryItems(user) {
     try {
 
-        let pattern = '(' + search + ')+';
-
         const data = await sequelize.query(
-            "SELECT c.id AS category_id, c.category_name AS category_name, i.id AS item_id, i.item_name AS item_name, i.selected AS selected FROM item i JOIN category c ON i.category_id = c.id WHERE i.user_username = :user AND item_name ~* :pattern ORDER BY c.id;", {
+            "SELECT c.id AS category_id, c.category_name AS category_name, i.id AS item_id, i.item_name AS item_name, i.selected AS selected FROM item i JOIN category c ON i.category_id = c.id WHERE i.user_username = :user ORDER BY c.id;", {
                 replacements: {
-                    user,
-                    pattern
+                    user
                 },
                 type: QueryTypes.SELECT
             }
         );
         addCategoryEmoji(data,"category_id");
-        return data;
+        return buildCategoryArray(data);
 
     } catch (err) {
         console.log(err)
     }
 }
 
-function buildCategoryArray(table) {
 
-    let categoryObject = {};
-    for (let row of table) {
-        if (categoryObject[row.category_id]) {
-            categoryObject[row.category_id].items.push({
-                item_id: row.item_id,
-                item_name: row.item_name,
-                selected: row.selected > 0 ? true : false
-            });
-        } else {
-            categoryObject[row.category_id] = {
-                category_id: row.category_id,
-                category_name: row.category_name,
-                items: [{
-                    item_id: row.item_id,
-                    item_name: row.item_name,
-                    selected: row.selected > 0 ? true : false
-                }]
-            }
-        }
-    }
-
-    for (let key of Object.keys(categoryObject)) {
-        categoryObject[key].items.sort((a,b) => a.item_name.localeCompare(b.item_name));
-    }
-
-    let categoryArray = [];
-    for (let id of Object.keys(categoryObject)) {
-        categoryArray.push(categoryObject[id]);
-    }
-
-    compareArrays(categoryArray, categoryOrder, "category_id");
-
-    return categoryArray;
-}
 
 
 // Select all Categories and Items
@@ -90,9 +49,8 @@ exports.selectItemCategories = async(req,res) => {
             }
         )
 
-        const categoryItemsTable = await getCategoryItems(req.user);
+        const categoryArray = await getCategoryItems(req.user);
         addCategoryEmoji(categories, "id");
-        const categoryArray = buildCategoryArray(categoryItemsTable);
         res.json([categoryArray, categories, stores]);
         return;
 
@@ -116,27 +74,11 @@ exports.itemSelection = async(req,res) => {
                 type: QueryTypes.POST
             }
         );
-        res.json({message: 'Item selection complete.'});
+        res.json(await getCategoryItems(req.user));
         return;
 
     } catch (err) {
         console.log('*** ERROR *** Server-side UPDATE Item Selection Error: ' + err);
-    }
-}
-
-
-// Search for Item(s)
-exports.searchItems = async(req,res) => {
-
-    try {
-
-        const searchItems = await getCategoryItems(req.user, req.body.pattern)
-        const categoryArray = buildCategoryArray(searchItems);
-        res.json(categoryArray);
-        return;
-
-    } catch (err) {
-        console.log('*** ERROR *** Server-side SEARCH ITEMS Error: ' + err);
     }
 }
 
@@ -163,7 +105,7 @@ exports.deleteItem = async(req,res) => {
                 }
             );
 
-        res.json({message: 'Item deleted successfully.'});
+        res.json(await getCategoryItems(req.user));
         return;
 
     } catch (err) {
@@ -202,9 +144,7 @@ exports.addItem = async(req,res) => {
             );
         }
 
-        const getItems = await getCategoryItems(user);
-        const categoryArray = buildCategoryArray(getItems);
-        res.json(categoryArray);
+        res.json(await getCategoryItems(user));
         return;
 
     } catch(err) {
@@ -288,7 +228,7 @@ exports.editItem = async(req,res) => {
             }
         }
 
-        res.json({message: 'Item edited successfully.'});
+        res.json(await getCategoryItems(user));
         return;
 
     } catch(err) {

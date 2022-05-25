@@ -7,8 +7,8 @@ import Container from 'react-bootstrap/Container';
 // Components
 import Route from './Route';
 import Login from './Login';
-import CurrentList from './CurrentList';
-import UpdateList from './UpdateList';
+import WhereTo from './WhereTo';
+import ShoppingList from './ShoppingList';
 import ManageStores from './ManageStores';
 
 
@@ -21,10 +21,10 @@ const Main = () => {
                 <Login/>
             </Route>
             <Route path="/dashboard">
-                <CurrentList />
+                <WhereTo />
             </Route>
             <Route path="/shopping-list">
-                <UpdateList />
+                <ShoppingList />
             </Route>
             <Route path="/manage-stores">
                 <ManageStores />

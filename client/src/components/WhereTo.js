@@ -2,7 +2,7 @@
 import React from 'react';
 
 // Import Axios calls
-import axiosRequest from '../axios/CurrentList';
+import axiosRequest from '../axios/WhereTo';
 
 // Bootstrap and CSS
 import Container from 'react-bootstrap/Container';
